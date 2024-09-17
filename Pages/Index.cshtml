@@ -1,0 +1,103 @@
+﻿@page
+@using KeanuLapid.Models
+@model KeanuLapid.Pages.IndexModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Payroll System</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .divider {
+            border-top: 2px solid #000;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Payroll System</h1>
+
+    <h2>Employees</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Position</td>
+                    <td>@employee.Salary.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="divider"></div> <!-- Divider line between Employees and Managers -->
+
+    <h2>Managers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Salary</th>
+                <th>Bonus</th>
+                <th>Total Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var manager in Model.Managers)
+            {
+                <tr>
+                    <td>@manager.Name</td>
+                    <td>@manager.Position</td>
+                    <td>@manager.Salary.ToString("C")</td>
+                    <td>@manager.Bonus.ToString("C")</td>
+                    <td>@Manager.CalculateTotalSalary(manager).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Add New Manager</h2>
+    <form method="post">
+        <label>Name:</label>
+        <input type="text" asp-for="ManagerName" />
+
+        <label>Position:</label>
+        <input type="text" asp-for="ManagerPosition" />
+
+        <label>Salary:</label>
+        <input type="number" asp-for="ManagerSalary" step="0.01" />
+
+        <label>Bonus:</label>
+        <input type="number" asp-for="ManagerBonus" step="0.01" />
+
+        <button type="submit" asp-page-handler="Calculate">Calculate Total Salary</button>
+    </form>
+
+    @if (Model.TotalManagerSalary > 0)
+    {
+        <h3>Calculated Total Salary for New Manager</h3>
+        <p>@Model.TotalManagerSalary.ToString("C")</p>
+    }
+</body>
+</html>
